@@ -1,41 +1,36 @@
 ---
-version: '3.3'
+version: "3.3"
 
 services:
-  mynginx:
-   image: nginx
+  nodeapp:
+   image: nodeapp
    ports:
-    - 5555:80
-   volumes:
-    - mynginx_vol:/usr/share/nginx/html/
-   container_name: mynginx
-
-  mysql:
-   image: mysql
-   environment:
-    MYSQL_ROOT_PASSWORD: root@123
-   volumes:
-    - mysql:/var/lib/mysql/
-   depends_on:
-    - mynginx
-   container_name: mysql_container
-
-  mongodb:
-   image: mongo
-   environment:
-     MONGO_INITDB_ROOT_USERNAME: root
-     MONGO_INITDB_ROOT_PASSWORD: Mongo@124
+    - "51005:51005"
    depends_on:
     - mysql
-   volumes:
-    - mongodb:/var/usr
-   container_name: mongo_container
+    - mongo
+   volumes: 
+    - nodeapp:/app/
+   container_name: web
 
+  mysql: 
+   image: mysql 
+   environment: 
+    MYSQL_ROOT_PASSWORD: password
+   volumes: 
+    - mysql:/var/lib/mysql/
+   container_name: mysql
+
+  mongo:
+    image: mongo
+    ports:
+    - "27017:27017"
+    volumes: 
+     - mongo:/data/db/
+    depends_on: 
+     - mysql
+    container_name: mongo
 volumes: 
- mynginx_vol:
- mysql:
- mongodb
- 
- 
-
-
+ nodeapp:
+ mysql:  
+ mongo:
